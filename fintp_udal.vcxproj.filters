@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ODBC">
+      <UniqueIdentifier>{34b48839-9840-4938-a326-d6294f202e3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ODBC\Informix">
+      <UniqueIdentifier>{35c44810-8f14-4eb8-a5e4-f68b63e0242c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ODBC\DB2">
+      <UniqueIdentifier>{89a74970-886f-4c04-8dea-46d9ac56e32d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ODBC\SqlServer">
+      <UniqueIdentifier>{22d81ff4-5595-4052-838e-dc2aa63f993a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Oracle">
+      <UniqueIdentifier>{628c96e7-a9e9-40c5-80b5-ba37f0d0946d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ODBC">
+      <UniqueIdentifier>{c3e12ee1-e244-4962-ad5e-7e33b751497d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ODBC\SqlServer">
+      <UniqueIdentifier>{4ea8ac8e-49a0-4611-b228-99214792ec7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ODBC\DB2">
+      <UniqueIdentifier>{57560358-73d0-4e2e-8f02-550779358865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ODBC\Informix">
+      <UniqueIdentifier>{f45d5168-24f8-4222-a615-263aff127206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Oracle">
+      <UniqueIdentifier>{8286f045-0246-472b-a598-f0605f7b172b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ODBC\Postgres">
+      <UniqueIdentifier>{ff48fe9a-c5eb-4efb-993b-ccb3d188531c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ODBC\Postgres">
+      <UniqueIdentifier>{657c651b-0193-4e7f-88d5-cadf4dd719e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ODBC\DB2\Db2DatabaseProvider.cpp">
+      <Filter>Source Files\ODBC\DB2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\DB2\Db2Database.cpp">
+      <Filter>Source Files\ODBC\DB2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\Informix\InformixDatabaseProvider.cpp">
+      <Filter>Source Files\ODBC\Informix</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\SqlServer\SqlServerDatabase.cpp">
+      <Filter>Source Files\ODBC\SqlServer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\SqlServer\SqlServerDatabaseProvider.cpp">
+      <Filter>Source Files\ODBC\SqlServer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Oracle\OracleColumn.cpp">
+      <Filter>Source Files\Oracle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Oracle\OracleParameter.cpp">
+      <Filter>Source Files\Oracle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Oracle\OracleDatabase.cpp">
+      <Filter>Source Files\Oracle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Oracle\OracleDatabaseProvider.cpp">
+      <Filter>Source Files\Oracle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\ODBCColumn.cpp">
+      <Filter>Source Files\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\ODBCDatabaseProvider.cpp">
+      <Filter>Source Files\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\ODBCDatabase.cpp">
+      <Filter>Source Files\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\ODBCParameter.cpp">
+      <Filter>Source Files\ODBC</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConnectionString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DatabaseProvider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataColumn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataParameter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataRow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\Informix\InformixDatabase.cpp">
+      <Filter>Source Files\ODBC\Informix</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\Postgres\PostgresDatabase.cpp">
+      <Filter>Source Files\ODBC\Postgres</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODBC\Postgres\PostgresDatabaseProvider.cpp">
+      <Filter>Source Files\ODBC\Postgres</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DllMainUdal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ODBC\DB2\Db2Database.h">
+      <Filter>Header Files\ODBC\DB2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\DB2\Db2DatabaseProvider.h">
+      <Filter>Header Files\ODBC\DB2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\Informix\InformixDatabase.h">
+      <Filter>Header Files\ODBC\Informix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\Informix\InformixDatabaseProvider.h">
+      <Filter>Header Files\ODBC\Informix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\SqlServer\SqlServerDatabase.h">
+      <Filter>Header Files\ODBC\SqlServer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\SqlServer\SqlServerDatabaseProvider.h">
+      <Filter>Header Files\ODBC\SqlServer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Oracle\OracleColumn.h">
+      <Filter>Header Files\Oracle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Oracle\OracleDatabaseProvider.h">
+      <Filter>Header Files\Oracle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Oracle\OracleDatabase.h">
+      <Filter>Header Files\Oracle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Oracle\OracleParameter.h">
+      <Filter>Header Files\Oracle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\ODBCColumn.h">
+      <Filter>Header Files\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\ODBCParameter.h">
+      <Filter>Header Files\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\ODBCDatabase.h">
+      <Filter>Header Files\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\ODBCDatabaseProvider.h">
+      <Filter>Header Files\ODBC</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ConnectionString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DatabaseProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataColumn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataParameter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataRow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\Postgres\PostgresDatabase.h">
+      <Filter>Header Files\ODBC\Postgres</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ODBC\Postgres\PostgresDatabaseProvider.h">
+      <Filter>Header Files\ODBC\Postgres</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DllMainUdal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

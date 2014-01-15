@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fintp_udal", "fintp_udal.vcxproj", "{292313FE-17FE-4325-922E-5CA8F4228719}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		ODBC Debug|Win32 = ODBC Debug|Win32
+		ODBC Release|Win32 = ODBC Release|Win32
+		Oracle Debug|Win32 = Oracle Debug|Win32
+		Oracle Release|Win32 = Oracle Release|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Debug|Win32.ActiveCfg = Debug|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Debug|Win32.Build.0 = Debug|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.ODBC Debug|Win32.ActiveCfg = ODBC Debug|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.ODBC Debug|Win32.Build.0 = ODBC Debug|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.ODBC Release|Win32.ActiveCfg = ODBC Release|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.ODBC Release|Win32.Build.0 = ODBC Release|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Oracle Debug|Win32.ActiveCfg = Oracle Debug|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Oracle Debug|Win32.Build.0 = Oracle Debug|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Oracle Release|Win32.ActiveCfg = Oracle Release|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Oracle Release|Win32.Build.0 = Oracle Release|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Release|Win32.ActiveCfg = Release|Win32
+		{292313FE-17FE-4325-922E-5CA8F4228719}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
