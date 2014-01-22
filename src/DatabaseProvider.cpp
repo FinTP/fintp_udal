@@ -21,30 +21,17 @@
 #include "DatabaseProvider.h"
 #include <sstream>
 
-#ifdef DB2_ONLY
-#include "ODBC/DB2/Db2DatabaseProvider.h"
-#endif
-
-#ifdef ORA_ONLY
+#ifdef WITH_ORACLE
 #include "Oracle/OracleDatabaseProvider.h"
 #endif
 
-#ifdef WIN32
-#ifdef FOX_ONLY
-#include "Fox/FoxDatabaseProvider.h"
-#endif
-#endif
-
-#ifdef INFORMIX_ONLY
+#ifdef WITH_ODBC
+#include "ODBC/DB2/Db2DatabaseProvider.h"
 #include "ODBC/Informix/InformixDatabaseProvider.h"
-#endif
-
-#ifdef SQLSERVER_ONLY
 #include "ODBC/SqlServer/SqlServerDatabaseProvider.h"
-#endif
-#ifdef POSTGRES_ONLY
 #include "ODBC/Postgres/PostgresDatabaseProvider.h"
 #endif
+
 #include "Base64.h"
 #include "Trace.h"
 
@@ -54,32 +41,20 @@ DatabaseProviderFactory* DatabaseProvider::GetFactory( const PROVIDER_TYPE& prov
 {
 	switch ( provider )
 	{
-#ifndef NO_DB
-#ifdef ORA_ONLY
+#ifdef WITH_ORACLE
 		case DatabaseProvider::Oracle :
 			return new OracleDatabaseFactory();
 #endif
-#ifdef DB2_ONLY
-		case DatabaseProvider::DB2 :
-			return new Db2DatabaseFactory();
-#endif
-#if defined ( WIN32 ) && defined ( FOX_ONLY )
-		case DatabaseProvider::Fox :
-			return new FoxDatabaseFactory();
-#endif
-#ifdef INFORMIX_ONLY
+#ifdef WITH_ODBC
 		case DatabaseProvider::Informix :
 			return new InformixDatabaseFactory();
-#endif
-#ifdef SQLSERVER_ONLY
+
 		case DatabaseProvider::SqlServer :
 			return new SqlServerDatabaseFactory();
-#endif
-#ifdef POSTGRES_ONLY
+
 		case DatabaseProvider::Postgres :
 			return new PostgresDatabaseFactory();
 #endif
-#endif//NO_DB
 		case DatabaseProvider::None :
 		{
 			stringstream errorMessage;
