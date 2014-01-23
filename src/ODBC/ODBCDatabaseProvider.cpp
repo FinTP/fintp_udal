@@ -172,9 +172,9 @@ short int ODBCDatabaseFactory::getODBCSqlType( const DataType::DATA_TYPE ODBCtyp
 			DEBUG_GLOBAL2( "Type is SQL INTEGER" );
 			return SQL_INTEGER;
 
-			//case DataType::LARGE_CHAR_TYPE:
-			//	DEBUG_GLOBAL2( "Type is SQL CLOB" );
-			//	return SQL_CLOB;
+		case DataType::LARGE_CHAR_TYPE:
+			DEBUG_GLOBAL2( "Type is SQL LONGVARCHAR" );
+			return SQL_LONGVARCHAR;
 
 		default:
 			break;
