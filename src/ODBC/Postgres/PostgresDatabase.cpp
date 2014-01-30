@@ -27,7 +27,7 @@ string PostgresDatabase::callFormating( const string& statementString, const Par
 	const size_t paramCount = vectorOfParameters.size();
 	// Compose the Stored Procedure CALL statement
 	stringstream paramBuffer;
-	paramBuffer << "SELECT " << statementString << "(";
+	paramBuffer << "{CALL " << statementString << "(";
 
 	for ( size_t i=0; i<paramCount; i++ )
 	{
@@ -48,10 +48,12 @@ string PostgresDatabase::callFormating( const string& statementString, const Par
 					paramBuffer << ",";
 			}
 			paramBuffer << " ]";
+			if ( i < paramCount - 1 )
+				paramBuffer << ",";
 		}
 	}
 
-	paramBuffer << ")";
+	paramBuffer << ")}";
 
 	return paramBuffer.str();
 }
