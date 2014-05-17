@@ -115,6 +115,10 @@ void ParametersVector::Dump() const
 				case DataType::NUMBER_TYPE :
 					TRACE( "\t[" << ( *finder )->getName() << "] = [" << ( *finder )->getLong() << "]" );
 					break;
+				case DataType::ARRAY :
+					for ( size_t i=0; i<( *finder )->getDimension(); i++ )
+						TRACE( "\t[" << ( *finder )->getName() << "[" << i << "]"  << "] = [" << ( *finder )->getElement(i) << "]" );
+					break;
 
 				default :
 					TRACE( "\t[" << ( *finder )->getName() << "]" );
