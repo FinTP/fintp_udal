@@ -28,6 +28,8 @@
 #include <vector>
 #include <cstring>
 
+#include <sql.h>
+
 using namespace std;
 
 namespace FinTP
@@ -38,11 +40,13 @@ namespace FinTP
 	template < class T >
 	class ExportedUdalObject ODBCParameter : public DataParameter< T >
 	{
+		private:
+			SQLLEN m_StrLen_or_IndPtr;
 		public :
 
 			// create DB2 parameter, implicit IN parameter
 			inline ODBCParameter( DataParameterBase::PARAMETER_DIRECTION paramDirection = DataParameterBase::PARAM_IN )
-				: DataParameter< T >( paramDirection ) {}
+				: DataParameter< T >( paramDirection ), m_StrLen_or_IndPtr( NULL ) {}
 
 			/**
 			* Constructor
@@ -56,9 +60,10 @@ namespace FinTP
 
 			inline ~ODBCParameter() {};
 
+			void** getBindHandle() { return reinterpret_cast<void **>(&m_StrLen_or_IndPtr); }
+
 			inline void setValue( T columnValue )
 			{
-				DEBUG2( "Set value [" << columnValue << "]" );
 				DataParameter< T >::m_Value = columnValue;
 				if ( DataParameter< T >::m_Dimension == 0 )
 					DataParameter< T >::m_Dimension = sizeof( DataParameter< T >::m_Value );
@@ -109,6 +114,13 @@ namespace FinTP
 		return m_Value[position];
 	}
 
+	template <>
+	inline void  ODBCParameter< vector< string > >::setValue( vector< string > columnValue )
+	{
+		m_Value = columnValue;
+		m_Dimension= m_Value.size();
+	}
+
 	//override for string
 	template<>
 	inline unsigned int ODBCParameter< string >::getDimension() const
@@ -120,68 +132,45 @@ namespace FinTP
 	template<>
 	inline void ODBCParameter< string >::setDimension( const unsigned int dimension )
 	{
-		//DEBUG( "Should be equal ( before resize : " ) << m_StoragePointer << " , " << ( void* )m_Value.data() );
-		//m_Value.resize( dimension );
-		DEBUG2( "Set dimension ["  << dimension << "]" );
 		DataParameterBase::setDimension( dimension );
 
-		if( m_StoragePointer != NULL )
-			delete[] m_StoragePointer;
+		delete[] m_StoragePointer;
+		m_StoragePointer = NULL;
 
-		m_StoragePointer = new unsigned char[ m_Dimension + 1 ];//( void * )m_Value.data();
+		m_StoragePointer = new unsigned char[ m_Dimension + 1 ];
 		memset( m_StoragePointer, 0, m_Dimension + 1 );
-		//DEBUG( "Should be equal ( after resize : " ) << m_StoragePointer << " , " << ( void* )m_Value.data() );
 	}
 
 	template<>
 	inline void ODBCParameter< string >::setValue( string columnValue )
 	{
-		//DEBUG( "SetValue : "  << columnValue );
-		string::size_type paramLength = columnValue.length();
-		DEBUG2( "Dimension : [" << m_Dimension << "] Address : [" << m_StoragePointer << "]" );
+		ODBCParameter< string >::setDimension( columnValue.length() );
 
-		if( m_StoragePointer == NULL )
-			dynamic_cast< ODBCParameter< string > * >( this )->setDimension( paramLength );
-		DEBUG2( "Dimension : ["  << m_Dimension << "] Address : [" << m_StoragePointer << "]" );
+		memcpy( m_StoragePointer, columnValue.c_str(), m_Dimension );
 
-		if( m_Dimension < paramLength )
+		switch ( m_Type )
 		{
-			TRACE( "Parameter storage size is less than source. Data right truncation from " << paramLength << " chars to " << m_Dimension );
-			memcpy( m_StoragePointer, columnValue.c_str(), m_Dimension );
-			//( ( unsigned char* )m_StoragePointer )[ m_Dimension - 1 ] = 0;
-		}
-		else
-		{
-			DEBUG2( "Storage size ok." );
-			memcpy( m_StoragePointer, columnValue.c_str(), paramLength );
+			case DataType::CHAR_TYPE:
+			case DataType::LARGE_CHAR_TYPE:
+			case DataType::DATE_TYPE:
+				m_StrLen_or_IndPtr = SQL_NTS;
+				break;
+			case DataType::BINARY :
+				m_StrLen_or_IndPtr = m_Dimension;
+				break;
 		}
 	}
 
 	template<>
 	inline string ODBCParameter< string >::getValue() const
 	{
-		string returnValue = string( ( char* )m_StoragePointer, m_Dimension );
-
-		//DEBUG( "pValue : "  << ( void* )m_Value.data() );
-#ifdef WIN32
-		DEBUG2( "Get value : ["  << returnValue << "]" );
-#endif
-
-		//DEBUG( "*Size : "  << strlen( ( ( char* )m_StoragePointer ) ) );
-		//DEBUG( "Should be equal : "  << m_StoragePointer << " , " << ( void* )m_Value.data() );
-
-		return returnValue;
+		return string( reinterpret_cast<char*>(m_StoragePointer), m_Dimension );
 	}
 
 	template <>
 	inline ODBCParameter< string >::~ODBCParameter()
 	{
-		DEBUG2( "Destructor" );
-		if( m_StoragePointer != NULL )
-		{
-			delete[] m_StoragePointer;
-			m_StoragePointer = NULL;
-		}
+		delete[] m_StoragePointer;
 	}
 }
 

@@ -100,6 +100,7 @@ DataParameterBase* ODBCDatabaseFactory::createParameter( DataType::DATA_TYPE par
 		case DataType::LONGINT_TYPE:
 			return new ODBCParameter< long >( parameterDirection );
 
+		case DataType::BINARY :
 		case DataType::LARGE_CHAR_TYPE:
 		{
 			DataParameterBase *charParam = new ODBCParameter< string >( parameterDirection );
@@ -176,6 +177,10 @@ short int ODBCDatabaseFactory::getODBCSqlType( const DataType::DATA_TYPE ODBCtyp
 			DEBUG_GLOBAL2( "Type is SQL LONGVARCHAR" );
 			return SQL_LONGVARCHAR;
 
+		case DataType::BINARY:
+			DEBUG_GLOBAL2( "Type is SQL BINARY" );
+			return SQL_BINARY;
+
 		default:
 			break;
 	}
@@ -220,6 +225,7 @@ short int ODBCDatabaseFactory::getODBCDataType( const DataType::DATA_TYPE ODBCty
 			DEBUG_GLOBAL2( "SQL ODBC Type is SQL C LONG" );
 			return SQL_C_LONG;
 
+		case DataType::BINARY :
 		case DataType::LARGE_CHAR_TYPE :
 			DEBUG_GLOBAL2( "SQL ODBC Type is SQL C BINARY" );
 			return SQL_C_BINARY;
@@ -300,10 +306,10 @@ DataType::DATA_TYPE ODBCDatabaseFactory::getDataType( const short int ODBCtype, 
 		case SQL_TYPE_TIMESTAMP :
 			return DataType::CHAR_TYPE;
 
-		case SQL_BINARY :
+		case SQL_BINARY:
 		case SQL_VARBINARY :
 		case SQL_LONGVARBINARY :
-			return DataType::CHAR_TYPE;
+			return DataType::BINARY;
 
 		default:
 			break;

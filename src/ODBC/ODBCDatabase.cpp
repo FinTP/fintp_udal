@@ -258,12 +258,15 @@ void ODBCDatabase::BindParams( const ParametersVector& vectorOfParameters, SQLHA
 		if ( vectorOfParameters[i]->getType() != DataType::ARRAY )
 		{
 			short int sqlType = ODBCDatabaseFactory::getODBCSqlType( paramType, vectorOfParameters[ i ]->getDimension() );
+
+			SQLLEN* StrLen_or_IndPtr = reinterpret_cast<SQLLEN*>(vectorOfParameters[i]->getBindHandle());
+
 			cliRC = SQLBindParameter( *statementHandle, i + 1,
 									  ODBCDatabaseFactory::getODBCParameterDirection( vectorOfParameters[i]->getDirection() ),
 									  ODBCDatabaseFactory::getODBCDataType( paramType ),
 									  sqlType, vectorOfParameters[i]->getDimension(),	0,
 									  vectorOfParameters[i]->getStoragePointer(),
-									  vectorOfParameters[i]->getDimension(), NULL );
+									  vectorOfParameters[i]->getDimension(), StrLen_or_IndPtr );
 			if ( ( cliRC != SQL_SUCCESS ) && ( cliRC != SQL_SUCCESS_WITH_INFO ) )
 			{
 				stringstream errorMessage;
@@ -655,11 +658,10 @@ DataSet* ODBCDatabase::getDataSet( DataCommand& command, const bool isCommandCac
 	//Define odbcRow as map of result columns
 	DataRow odbcRow;
 	bool inBlobsArea = false;
-	string blobColumnName = "";
-	unsigned short blobColumnIndex = 0;
+	map<SQLUSMALLINT, string> blobColumns;
 
 	//#region For each column in the result set, describe result and alloc buffers
-	for ( unsigned short i=0; i<nResultCols; i++ )
+	for ( SQLUSMALLINT i=0; i<nResultCols; i++ )
 	{
 		string columnName = "";
 		DataType::DATA_TYPE columnType = DataType::INVALID_TYPE, columnBaseType = DataType::INVALID_TYPE;
@@ -685,7 +687,7 @@ DataSet* ODBCDatabase::getDataSet( DataCommand& command, const bool isCommandCac
 			DEBUG( "Getting column [" << i << "] description ..." );
 
 			// Get each column description
-			cliRC = SQLDescribeCol( *statementHandle, ( SQLSMALLINT )( i + 1 ), colName, MAX_ODBC_COLUMN_NAME,
+			cliRC = SQLDescribeCol( *statementHandle, ( SQLUSMALLINT )( i + 1 ), colName, MAX_ODBC_COLUMN_NAME,
 			                        &colNameLen, &colType, &colSize, &colScale,	NULL );
 
 			if ( ( cliRC != SQL_SUCCESS ) && ( cliRC != SQL_SUCCESS_WITH_INFO ) )
@@ -724,16 +726,11 @@ DataSet* ODBCDatabase::getDataSet( DataCommand& command, const bool isCommandCac
 			// Don't bind BLOBS/CLOBS at least for SqlServer..
 			if ( ( columnType == DataType::BINARY ) || ( columnBaseType == DataType::BINARY ) )
 			{
-				inBlobsArea = true;
-				blobColumnIndex = i;
-				blobColumnName = columnName;
+				blobColumns.insert( pair<SQLUSMALLINT, string>( i, columnName ) );
 				odbcColumn->setBaseType( DataType::BINARY );
 			}
 			else
 			{
-				if ( inBlobsArea )
-					throw logic_error( "BINARY columns must have higher column ordinals than the bound columns" );
-
 				DEBUG2( "Bind columns..." );
 				cliRC = SQLBindCol( *statementHandle, ( SQLSMALLINT )( i + 1 ), ODBCDatabaseFactory::getODBCDataType( columnType ),
 				                    odbcColumn->getStoragePointer(), columnDimension, (SQLLEN*)odbcColumn->getBufferIndicator() );
@@ -803,14 +800,14 @@ DataSet* ODBCDatabase::getDataSet( DataCommand& command, const bool isCommandCac
 		while ( cliRC != SQL_NO_DATA_FOUND )
 		{
 			//Check to see if we need to get a blob
-			if ( inBlobsArea )
+			map<SQLUSMALLINT, string>::const_iterator it;
+			for ( it = blobColumns.begin(); it != blobColumns.end(); ++it ) 
 			{
 				BYTE tempBlogDummy;
-				BYTE *tempBlob = NULL;
 				SQLLEN blobIndicator;
 
 				// Call SQLGetData to determine the amount of data that's waiting.
-				cliRC = SQLGetData( *statementHandle, ( SQLSMALLINT )( blobColumnIndex + 1 ),
+				cliRC = SQLGetData( *statementHandle, ( SQLSMALLINT )( it->first + 1 ),
 				                    SQL_C_BINARY, &tempBlogDummy, 0, &blobIndicator );
 				if ( ( cliRC != SQL_SUCCESS ) && ( cliRC != SQL_SUCCESS_WITH_INFO ) )
 				{
@@ -825,46 +822,28 @@ DataSet* ODBCDatabase::getDataSet( DataCommand& command, const bool isCommandCac
 					throw errorEx;
 				}
 				if ( blobIndicator <= 0 )
-					static_cast< ODBCColumn< string >* >( odbcRow[ blobColumnName ] )->setValue( "" );
+					static_cast< ODBCColumn< string >* >( odbcRow[ it->second ] )->setValue( "" );
 				else
 				{
-					try
+					vector<BYTE> tempBlob( blobIndicator );
+
+					cliRC = SQLGetData( *statementHandle, ( SQLSMALLINT )( it->first + 1 ),
+						                SQL_C_DEFAULT, &tempBlob[0], blobIndicator, &blobIndicator );
+					if ( ( cliRC != SQL_SUCCESS ) && ( cliRC != SQL_SUCCESS_WITH_INFO ) )
 					{
-						tempBlob = new BYTE[ blobIndicator ];
-						cliRC = SQLGetData( *statementHandle, ( SQLSMALLINT )( blobColumnIndex + 1 ),
-						                    SQL_C_DEFAULT, tempBlob, blobIndicator, &blobIndicator );
-						if ( ( cliRC != SQL_SUCCESS ) && ( cliRC != SQL_SUCCESS_WITH_INFO ) )
-						{
-							stringstream errorMessage;
-							errorMessage << "Get Blob data failed [" << getErrorInformation( SQL_HANDLE_STMT, *statementHandle ) << "]";
+						stringstream errorMessage;
+						errorMessage << "Get Blob data failed [" << getErrorInformation( SQL_HANDLE_STMT, *statementHandle ) << "]";
 
-							DBErrorException errorEx( errorMessage.str() );
-							errorEx.addAdditionalInfo( "statement", command.getModifiedStatementString() );
-							errorEx.addAdditionalInfo( "location", "ODBCDatabase::getDataSet" );
+						DBErrorException errorEx( errorMessage.str() );
+						errorEx.addAdditionalInfo( "statement", command.getModifiedStatementString() );
+						errorEx.addAdditionalInfo( "location", "ODBCDatabase::getDataSet" );
 
-							TRACE( errorMessage.str() << " in [" << command.getModifiedStatementString() << "]" );
-							throw errorEx;
-						}
-
-						string tempLobStr = Base64::encode( tempBlob, blobIndicator );
-						static_cast< ODBCColumn< string >* >( odbcRow[ blobColumnName ] )->setValue( tempLobStr );
-						//TODO Poate fi eliminata odbcRow[ blobColumnName ] are deja tipul asociat
-						odbcRow[ blobColumnName ]->setBaseType( DataType::BINARY );
+						TRACE( errorMessage.str() << " in [" << command.getModifiedStatementString() << "]" );
+						throw errorEx;
 					}
-					catch( ... )
-					{
-						if( tempBlob )
-						{
-							delete [] tempBlob;
-							tempBlob = NULL;
-						}
-						throw;
-					}
-				}
-				if( tempBlob )
-				{
-					delete [] tempBlob;
-					tempBlob = NULL;
+
+					const string base64EncodedBinaryData( Base64::encode( &tempBlob[0], blobIndicator ) );
+					static_cast< ODBCColumn< string >* >( odbcRow[ it->second ] )->setValue( base64EncodedBinaryData );
 				}
 			}
 
