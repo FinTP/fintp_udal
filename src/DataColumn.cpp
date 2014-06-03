@@ -218,12 +218,12 @@ string DataColumnBase::getString()
 {
 	try
 	{
-		return ( dynamic_cast< DataColumn< string > * >( this ) )->getValue();
+		return ( dynamic_cast< DataColumn< string > & >( *this ) ).getValue();
 	}
-	catch( ... )
+	catch( std::bad_cast& )
 	{
 		TRACE( "Attempted cast to DataColumn< string > on a non string column." );
-		throw runtime_error( "Attempted cast to DataColumn< string > on a non string column." );
+		throw;
 	}
 }
 
@@ -236,12 +236,12 @@ short DataColumnBase::getShort()
 {
 	try
 	{
-		return ( dynamic_cast< DataColumn< short > * >( this ) )->getValue();
+		return ( dynamic_cast< DataColumn< short > & >( *this ) ).getValue();
 	}
-	catch( ... )
+	catch( std::bad_cast& )
 	{
 		TRACE( "Attempted cast to DataColumn< short > on a non short column." );
-		throw runtime_error( "Attempted cast to DataColumn< short > on a non short column." );
+		throw;
 	}
 }
 
