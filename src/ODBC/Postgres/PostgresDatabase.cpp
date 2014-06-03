@@ -118,18 +118,7 @@ DataSet* PostgresDatabase::ExecuteQuery( const DataCommand& query, const Paramet
 					if ( foundPortalNumber == 0 )
 						throw runtime_error( "Invalid portal number" );
 					delete result;
-					//TODO: Find out why this statement doesn't work with bind parameters.
-					return ExecuteQuery( DataCommand::INLINE, "FETCH ALL FROM \"" + refCursorName +"\"", false, 0 );
-				}
-			}
-
-			if ( !foundPortalNumber ) //This is just a FinTP thing. Postgres procedures shall return a refcursor with the same name as the procedure.
-			{
-				const string uppercaseStringStatement = StringUtil::ToUpper( query.getStatementString() );
-
-				if ( StringUtil::ToUpper( refCursorName ) == uppercaseStringStatement && uppercaseStringStatement == columnName  )
-				{
-					delete result;
+					result = NULL;
 					//TODO: Find out why this statement doesn't work with bind parameters.
 					return ExecuteQuery( DataCommand::INLINE, "FETCH ALL FROM \"" + refCursorName +"\"", false, 0 );
 				}
