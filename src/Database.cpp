@@ -43,7 +43,7 @@ using namespace FinTP;
 string Database::DateFormat = "DD.MM.YYYY";
 string Database::TimestampFormat = "DD.MM.YYYY HH:MI";
 
-Database::Database() : m_LastErrorCode( "" ), m_LastUpdateCount( 1 )
+Database::Database() : m_LastErrorCode( "" ), m_LastNumberofAffectedRows( 0 )
 {
 }
 

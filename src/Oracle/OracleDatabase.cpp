@@ -1212,7 +1212,7 @@ void OracleDatabase::executeNonQuery( DataCommand& command, const bool isCommand
 		errorMessage << "Getting the number of updated rows failed [" << getErrorInformation( m_hError, status ) << "]";
 		throw runtime_error( errorMessage.str() );
 	}
-	m_LastUpdateCount = ( unsigned int )rowCount;
+	m_LastNumberofAffectedRows = rowCount;
 }
 
 DataSet* OracleDatabase::executeQuery( DataCommand& command, const bool isCommandCached, const bool holdCursor )

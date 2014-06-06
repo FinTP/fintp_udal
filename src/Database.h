@@ -141,7 +141,7 @@ namespace FinTP
 			/** The last error code returned from command execution. **/
 			string m_LastErrorCode;
 			/** The number of updates last command performed. **/
-			unsigned int m_LastUpdateCount;
+			unsigned int m_LastNumberofAffectedRows;
 			
 		public:
 
@@ -345,8 +345,8 @@ namespace FinTP
 			**/
 			static void DisplayDataSet( const DataSet* theDataSet );
 
-			int getLastUpdateCount() const {
-				return m_LastUpdateCount;
+			int getLastNumberofAffectedRows() const {
+				return m_LastNumberofAffectedRows;
 			}
 
   			/**@{*/

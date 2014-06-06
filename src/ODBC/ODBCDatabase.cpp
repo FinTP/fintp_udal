@@ -558,6 +558,42 @@ void ODBCDatabase::executeNonQuery( DataCommand& command, const bool isCommandCa
 		}
 		break;
 	}
+
+	SQLLEN rowCount = 0;
+	cliRC = SQLRowCount( *statementHandle, &rowCount );
+	switch ( cliRC )
+	{
+		case SQL_SUCCESS :
+			break;
+		case SQL_SUCCESS_WITH_INFO :
+		{
+			//maybe data source cannot return the number of rows in a result set before fetching them
+			stringstream errorMessage;
+			errorMessage << "Could not get number of affected rows [" << getErrorInformation( SQL_HANDLE_STMT, *statementHandle ) << "]";
+
+			DBWarningException warningEx( errorMessage.str() );
+			warningEx.addAdditionalInfo( "statement", command.getModifiedStatementString() );
+			warningEx.addAdditionalInfo( "location", "ODBCDatabase::ExecuteNonQuery" );
+
+			TRACE( errorMessage.str() << " in [" << command.getModifiedStatementString() << "]" );
+
+			throw warningEx;
+		}
+		default:
+		{
+			stringstream errorMessage;
+			errorMessage << "Could not get number of affected rows [" << getErrorInformation( SQL_HANDLE_STMT, *statementHandle ) << "]";
+			DBErrorException errorEx( errorMessage.str() );
+			errorEx.addAdditionalInfo( "statement", command.getModifiedStatementString() );
+			errorEx.addAdditionalInfo( "location", "ODBCDatabase::ExecuteNonQuery" );
+
+			TRACE( errorMessage.str() << " in [" << command.getModifiedStatementString() << "]" );
+
+			throw errorEx;
+		}
+	}
+
+	m_LastNumberofAffectedRows = rowCount;
 }
 
 DataSet* ODBCDatabase::executeQuery( DataCommand& command, const bool isCommandCached, SQLHANDLE* statementHandle, const bool holdCursor, const unsigned int fetchRows )
