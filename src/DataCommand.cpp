@@ -43,10 +43,6 @@ DataCommand::DataCommand( const DataCommand& source ) :
 	m_StatementString( source.m_StatementString ), m_ModifiedStatementString( source.m_ModifiedStatementString ),
 	m_Cacheable( source.m_Cacheable )
 {
-	for ( unsigned int i=0; i<source.getParametersCount(); i++ )
-	{
-		addParameter( i, &( source.getParameter( i ) ) );
-	}
 	for ( unsigned int j=0; j<source.getResultColumnCount(); j++ )
 	{
 		addResultColumn( j, &( source.getResultColumn( j ) ) );
@@ -64,20 +60,10 @@ DataCommand& DataCommand::operator=( const DataCommand& source )
 	m_ModifiedStatementString = source.m_ModifiedStatementString;
 	m_Cacheable = source.m_Cacheable;
 
-	for ( unsigned int i=0; i<source.getParametersCount(); i++ )
-	{
-		addParameter( i, &( source.getParameter( i ) ) );
-	}
 	for ( unsigned int j=0; j<source.getResultColumnCount(); j++ )
 	{
 		addResultColumn( j, &( source.getResultColumn( j ) ) );
 	}
-#ifdef IFX_ONLY
-	for ( unsigned int k=0; k<source.getCursorOptionsCount(); k++ )
-	{
-		addCursorOptions( k, source.getCursorOptions( k ) );
-	}
-#endif
 
 	return *this;
 }

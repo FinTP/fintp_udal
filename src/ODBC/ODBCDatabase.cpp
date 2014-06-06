@@ -259,7 +259,7 @@ void ODBCDatabase::BindParams( const ParametersVector& vectorOfParameters, SQLHA
 		{
 			short int sqlType = ODBCDatabaseFactory::getODBCSqlType( paramType, vectorOfParameters[ i ]->getDimension() );
 
-			SQLLEN* StrLen_or_IndPtr = reinterpret_cast<SQLLEN*>(vectorOfParameters[i]->getBindHandle());
+			SQLLEN* StrLen_or_IndPtr = reinterpret_cast<SQLLEN*>(vectorOfParameters[i]->getIndicatorValue());
 
 			cliRC = SQLBindParameter( *statementHandle, i + 1,
 									  ODBCDatabaseFactory::getODBCParameterDirection( vectorOfParameters[i]->getDirection() ),

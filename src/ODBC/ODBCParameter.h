@@ -60,7 +60,7 @@ namespace FinTP
 
 			inline ~ODBCParameter() {};
 
-			void** getBindHandle() { return reinterpret_cast<void **>(&m_StrLen_or_IndPtr); }
+			void* getIndicatorValue() { return reinterpret_cast<void *>(&m_StrLen_or_IndPtr); }
 
 			inline void setValue( T columnValue )
 			{
@@ -86,6 +86,11 @@ namespace FinTP
 			inline unsigned int getDimension() const
 			{
 				return DataParameterBase::getDimension();
+			}
+
+			bool isNULLValue() const
+			{
+				return ( m_StrLen_or_IndPtr == SQL_NULL_DATA );
 			}
 	};
 

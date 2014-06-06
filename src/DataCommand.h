@@ -120,11 +120,6 @@ namespace FinTP
 			bool m_Cacheable;
 
 			/**
-			 * Data member provided to store SQL statement parameters
-			**/
-			CacheManager< unsigned int, DataParameterBase > m_Parameters;
-
-			/**
 			 * Data member provided to store result set columns description.
 			**/
 			CacheManager< unsigned int, DataColumnBase > m_ResultColumns;
@@ -199,15 +194,6 @@ namespace FinTP
 				m_Cacheable = cacheable;
 			}
 
-			/**
-			* Get indexd parameter
-			* \param int index is the parameter position
-			* \return the parameter on the index position
-			**/
-			const DataParameterBase& getParameter( unsigned int index ) const {
-				return m_Parameters[ index ];
-			}
-
 			/** 
 			* Get result set indexed column 
 			* \param int index is the column position
@@ -217,28 +203,11 @@ namespace FinTP
 				return m_ResultColumns[ index ];
 			}
 
-			/** 
-			* \return parameter number for command 
-			**/
-			unsigned int getParametersCount() const {
-				return m_Parameters.size();
-			}
-
 			/**
 			* \return result set column number
 			**/
 			unsigned int getResultColumnCount() const {
 				return m_ResultColumns.size();
-			}
-
-			/**
-			* Add a parameter to m_Parameters
-			* \param index is the parameter position, 
-			* \param DataParamater to be added
-			**/
-			void addParameter( const unsigned int index, const DataParameterBase* parameter )
-			{
-				m_Parameters.Add( index, DataParameterBase( parameter->getName(), parameter->getType(), parameter->getDirection(), parameter->getDimension() ) );
 			}
 
 			/**

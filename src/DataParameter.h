@@ -199,6 +199,8 @@ namespace FinTP
 				return NULL;
 			}
 
+			virtual void* getIndicatorValue() = 0;
+
 			inline virtual void setDimension( const unsigned int dimension ) {
 				m_Dimension = dimension;
 			}
@@ -206,6 +208,8 @@ namespace FinTP
 			inline virtual unsigned int getDimension() const {
 				return m_Dimension;
 			}
+
+			virtual bool isNULLValue() const = 0;
 
 			inline virtual void push_back( const string& value ) { throw logic_error("Not supported by this data type"); }
 			inline virtual const string& getElement( size_t position ) const { throw logic_error("Not supported by this data type"); }

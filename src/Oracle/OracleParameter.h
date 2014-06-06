@@ -55,7 +55,7 @@ namespace FinTP
 			* \param paramDirection type PARAMETER_DIRECTION. The parameter direction (in, out or inout)
 			**/
 			explicit inline OracleParameter( DataParameterBase::PARAMETER_DIRECTION paramDirection = DataParameterBase::PARAM_IN )
-				: DataParameter< T >( paramDirection ), m_hBind( NULL ) {}
+				: DataParameter< T >( paramDirection ), m_hBind( NULL ), m_IndicatorVariable( 0 ) {}
 
 			/**
 			* Constructor
@@ -63,7 +63,7 @@ namespace FinTP
 			* \param paramDirection type PARAMETER_DIRECTION	The parameter direction (in, out or inout)
 			**/
 			explicit inline OracleParameter( const string& paramName, DataParameterBase::PARAMETER_DIRECTION paramDirection = DataParameterBase::PARAM_IN)
-				: DataParameter< T >( paramName, paramDirection ), m_hBind( NULL )  {}
+				: DataParameter< T >( paramName, paramDirection ), m_hBind( NULL ), m_IndicatorVariable( 0 )  {}
 
 			/**
 			 * Copy constructor.
@@ -128,9 +128,20 @@ namespace FinTP
 				return ( void ** )&m_hBind;
 			}
 
+			void* getIndicatorValue()
+			{
+				return ( void * )&m_IndicatorVariable;
+			}
+
+			bool isNULLValue() const
+			{
+				return ( m_IndicatorVariable == -1 );
+			}
+
 		private :
 
 			OCIBind* m_hBind;
+			sb2 m_IndicatorVariable;
 
 			//static int getOracleParameterDirection( DataParameterBase::PARAMETER_DIRECTION paramDirection );
 			//static int getOracleParameterType( DataType::DATA_TYPE paramType );

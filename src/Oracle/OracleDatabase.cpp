@@ -476,7 +476,7 @@ void OracleDatabase::BindParams( const ParametersVector& vectorOfParameters, con
 						}
 
 
-						status = OCIBindByPos( m_StatementHandle, ( OCIBind ** )( vectorOfParameters[ i ]->getBindHandle() ), m_hError, i + startIndex, ( dvoid * )&paramDate, ( sword )( sizeof( OCIDate ) ), sqlType, ( dvoid * )0, ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
+						status = OCIBindByPos( m_StatementHandle, ( OCIBind ** )( vectorOfParameters[ i ]->getBindHandle() ), m_hError, i + startIndex, ( dvoid * )&paramDate, ( sword )( sizeof( OCIDate ) ), sqlType, vectorOfParameters[ i ]->getIndicatorValue(), ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
 					}
 					else
 					{
@@ -564,7 +564,7 @@ void OracleDatabase::BindParams( const ParametersVector& vectorOfParameters, con
 
 					status = OCIBindByPos( m_StatementHandle, ( OCIBind ** )( vectorOfParameters[ i ]->getBindHandle() ), m_hError, i + startIndex,
 					                       ( dvoid * )&m_ClobLocator, sizeof( OCIClobLocator* ), sqlType,
-					                       ( dvoid * )0, ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
+					                       vectorOfParameters[ i ]->getIndicatorValue(), ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
 
 					break;
 
@@ -628,7 +628,7 @@ void OracleDatabase::BindParams( const ParametersVector& vectorOfParameters, con
 
 					status = OCIBindByPos( m_StatementHandle, ( OCIBind ** )( vectorOfParameters[ i ]->getBindHandle() ), m_hError, i + startIndex,
 					                       ( dvoid * )&m_BlobLocator, sizeof( OCIBlobLocator* ), sqlType,
-					                       ( dvoid * )0, ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
+					                       vectorOfParameters[ i ]->getIndicatorValue(), ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
 
 					break;
 
@@ -693,7 +693,7 @@ void OracleDatabase::BindParams( const ParametersVector& vectorOfParameters, con
 					                       ( OCIBind ** )( vectorOfParameters[ i ]->getBindHandle() ), m_hError, i + startIndex,
 					                       ( dvoid * )vectorOfParameters[ i ]->getStoragePointer(),
 					                       ( sword )vectorOfParameters[ i ]->getDimension(), sqlType,
-					                       ( dvoid * )0, ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
+					                       vectorOfParameters[ i ]->getIndicatorValue(), ( ub2 * )0, ( ub2 * )0, ( ub4 )0, ( ub4 * )0, OCI_DEFAULT );
 					break;
 			}
 
