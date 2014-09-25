@@ -1716,18 +1716,22 @@ DataSet* OracleDatabase::getDataSet( DataCommand& command, const bool isCommandC
 						throw runtime_error( errorMessage.str() );
 					}
 
-					oracleRow[ clobColumnName ]->setDimension( lenp );
-					DEBUG2( "Reading CLOB ... " );
-
-					char *tempLob = NULL;
 					try
 					{
-						tempLob = new char[ lenp ];
-						status = OCILobRead( m_hServiceContext, m_hError, m_FetchClobLocator, &lenp,
-						                     1, tempLob, lenp, ( dvoid * )0, 0, 0, SQLCS_IMPLICIT );
+						oracleRow[ clobColumnName ]->setDimension( lenp );
+						DEBUG2( "Reading CLOB ... " );
 
-						string tempLobStr( tempLob, lenp );
-						dynamic_cast< OracleColumn< string >* >( oracleRow[ clobColumnName ] )->setValue( tempLobStr );
+						string tempLobStr;
+						vector<char> tempLob( lenp );
+
+						do
+						{
+							ub4 numberOfReadBytes = lenp;
+							status = OCILobRead( m_hServiceContext, m_hError, m_FetchClobLocator, &numberOfReadBytes,
+												1, &tempLob[0], lenp, ( dvoid * )0, 0, 0, SQLCS_IMPLICIT );
+							tempLobStr = tempLobStr + string( &tempLob[0], numberOfReadBytes );
+						}
+						while ( status == OCI_NEED_DATA );
 
 						if ( status != OCI_SUCCESS )
 						{
@@ -1735,21 +1739,17 @@ DataSet* OracleDatabase::getDataSet( DataCommand& command, const bool isCommandC
 							errorMessage << "Read CLOB failed [" << getErrorInformation( m_hError, status ) << "]";
 							throw runtime_error( errorMessage.str() );
 						}
-						DEBUG2( "No of bytes read : " << lenp );
+
+						static_cast< OracleColumn< string >* >( oracleRow[ clobColumnName ] )->setValue( tempLobStr );
+
+						DEBUG2( "No of bytes read : " << tempLobStr.size() );
 					}
-					catch( ... )
+					catch ( ... )
 					{
-						if ( tempLob != NULL )
-						{
-							delete[] tempLob;
-							tempLob = NULL;
-						}
+						status = OCILobClose( m_hServiceContext, m_hError, m_FetchClobLocator );
+						if ( status != OCI_SUCCESS )
+							DEBUG( getErrorInformation( m_hError, status ) )
 						throw;
-					}
-					if ( tempLob != NULL )
-					{
-						delete[] tempLob;
-						tempLob = NULL;
 					}
 
 					DEBUG2( "Closing CLOB ... " );
