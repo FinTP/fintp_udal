@@ -20,6 +20,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include <Trace.h>
+
 #include <ConnectionString.h>
 #include <Database.h>
 #include <DatabaseProvider.h>
